@@ -8,8 +8,8 @@ Centralizes all parameters for reproducibility and easy modification
 # ============================================================================
 
 # Sentinel Hub Credentials (from your code)
-SH_CLIENT_ID = "2d056f72-d31c-4135-bc7d-2b9ee60be836"
-SH_CLIENT_SECRET = "pY2qTS1ZRuHbkhb988bsYeCLXpEpHCR6"
+SH_CLIENT_ID = "4ee192a5-eaab-44fa-abf0-048c20863523"
+SH_CLIENT_SECRET = "E2xvAOd5dNt6l3mVWPBnTHXaPWcuwWFp"
 
 # Study Area (Bounding Box in WGS84: lon_min, lat_min, lon_max, lat_max)
 BBOX = [20.97, 55.67, 28.24, 58.08]  # Lithuania region
