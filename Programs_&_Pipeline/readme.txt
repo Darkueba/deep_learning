@@ -113,7 +113,7 @@ Output:
   - figures/01_raw_imagery_visualization.png
 
 
-MODULE 2: feature_extraction.py (TO CREATE)
+MODULE 2: feature_extraction.py
 ─────────────────────────────────────────────────────────────────────────────
 Purpose: Calculate spectral indices and prepare ML features
 Key Class: FeatureExtractor
@@ -130,7 +130,7 @@ Output:
   - Feature statistics
 
 
-MODULE 3: traditional_ml.py (TO CREATE)
+MODULE 3: traditional_ml.py
 ─────────────────────────────────────────────────────────────────────────────
 Purpose: Train & evaluate traditional classifiers
 Classifiers:
@@ -152,7 +152,7 @@ Output:
   - Confusion matrices
 
 
-MODULE 4: deep_learning.py (TO CREATE)
+MODULE 4: deep_learning.py 
 ─────────────────────────────────────────────────────────────────────────────
 Purpose: Deep learning models for semantic segmentation
 Architectures:
@@ -171,7 +171,7 @@ Output:
   - Pixel-wise predictions
 
 
-MODULE 5: evaluation.py (TO CREATE)
+MODULE 5: evaluation.py 
 ─────────────────────────────────────────────────────────────────────────────
 Purpose: Comprehensive accuracy assessment
 Metrics Calculated:
@@ -190,7 +190,7 @@ Output:
   - Statistical analysis
 
 
-MODULE 6: visualization.py (TO CREATE)
+MODULE 6: visualization.py 
 ─────────────────────────────────────────────────────────────────────────────
 Purpose: Create publication-quality visualizations
 Plots:
@@ -205,7 +205,7 @@ Output:
   - PNG/PDF figures for report
 
 
-MODULE 7: main_pipeline.py (TO CREATE)
+MODULE 7: main_pipeline.py 
 ─────────────────────────────────────────────────────────────────────────────
 Purpose: End-to-end automation
 Flow:
