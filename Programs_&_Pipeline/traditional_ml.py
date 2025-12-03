@@ -242,7 +242,7 @@ class TraditionalClassifiers:
         self.train_random_forest(X_train, y_train)
         
         # SVM
-        self.train_svm(X_train, y_train)
+        #self.train_svm(X_train, y_train)
         
         # k-NN
         self.train_knn(X_train, y_train)
