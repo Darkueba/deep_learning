@@ -1,0 +1,9 @@
+{
+  "Random Forest": {
+    "Overall Accuracy": 0.9582676364376176,
+    "Kappa": 0.9337213898823293,
+    "Precision (Macro)": 0.949783942678114,
+    "Recall (Macro)": 0.8841473910494205,
+    "F1-Score (Macro)": 0.9134873663796645,
+    "F1-Score (Weighted)": 0.9571947945033175,
+    "Confusion Matrix": 

@@ -1,5 +1,5 @@
 """
-MAIN_PIPELINE.PY - Fixed for segmentation
+MAIN_PIPELINE.PY - Fixed for segmentation with visualization
 Orchestrates complete land cover classification with semantic segmentation
 """
 
@@ -9,6 +9,8 @@ import time
 import logging
 from datetime import datetime
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 try:
     import config
@@ -36,6 +38,99 @@ class LandCoverClassificationPipeline:
         for directory in [config.RAW_DATA_DIR, config.PROCESSED_DATA_DIR,
                          config.TRAINING_DATA_DIR, config.RESULTS_DIR, config.FIGURES_DIR]:
             os.makedirs(directory, exist_ok=True)
+    
+    def visualize_classification_result(self, labels_2d, imagery=None, title="Land Cover Classification"):
+        """
+        Create a colored map of classification results and save as image.
+        
+        Parameters
+        ----------
+        labels_2d : array, shape (H, W)
+            2D array with class labels (0-4)
+        imagery : array, shape (H, W, 3) or None
+            Optional RGB imagery to show as background
+        title : str
+            Title for the figure
+        """
+        logger.info(f"\nVisualizing classification results...")
+        
+        # Define colors for each class
+        colors = {
+            0: [0.2, 0.6, 0.9],      # Water - light blue
+            1: [0.1, 0.5, 0.1],      # Forest - green
+            2: [0.8, 0.9, 0.2],      # Grassland - yellow
+            3: [0.8, 0.3, 0.1],      # Urban - orange
+            4: [0.7, 0.6, 0.4],      # Bare soil - brown
+        }
+        
+        class_names = {
+            0: "Water",
+            1: "Forest",
+            2: "Grassland",
+            3: "Urban",
+            4: "Bare Soil",
+        }
+        
+        # Create colored output
+        h, w = labels_2d.shape
+        colored_output = np.zeros((h, w, 3), dtype=np.float32)
+        
+        for class_id, color in colors.items():
+            mask = labels_2d == class_id
+            colored_output[mask] = color
+        
+        # Create figure with subplots
+        fig, axes = plt.subplots(1, 2 if imagery is not None else 1, figsize=(14, 6))
+        
+        if imagery is not None:
+            # Show original imagery on left
+            if imagery.shape[2] >= 3:
+                rgb = imagery[:, :, [2, 1, 0]]  # BGR to RGB if needed
+                rgb = np.clip(rgb / rgb.max(), 0, 1)
+            else:
+                rgb = np.repeat(imagery[:, :, 0:1], 3, axis=2)
+            
+            axes[0].imshow(rgb)
+            axes[0].set_title("Original Satellite Imagery")
+            axes[0].axis("off")
+            
+            # Show classification on right
+            axes[1].imshow(colored_output)
+            axes[1].set_title(title)
+            axes[1].axis("off")
+        else:
+            # Show classification only
+            if isinstance(axes, np.ndarray):
+                ax = axes[0]
+            else:
+                ax = axes
+            ax.imshow(colored_output)
+            ax.set_title(title)
+            ax.axis("off")
+        
+        # Add legend
+        legend_elements = [
+            mpatches.Patch(facecolor=colors[i], label=class_names[i])
+            for i in sorted(colors.keys())
+        ]
+        
+        if imagery is not None:
+            axes[1].legend(handles=legend_elements, loc='upper right', fontsize=10)
+        else:
+            if isinstance(axes, np.ndarray):
+                axes[0].legend(handles=legend_elements, loc='upper right', fontsize=10)
+            else:
+                axes.legend(handles=legend_elements, loc='upper right', fontsize=10)
+        
+        plt.tight_layout()
+        
+        # Save figure
+        fig_path = os.path.join(config.FIGURES_DIR, f'classification_result_ml.png')
+        plt.savefig(fig_path, dpi=150, bbox_inches='tight')
+        logger.info(f"✓ Saved classification visualization: {fig_path}")
+        plt.close()
+        
+        return fig_path
     
     def run_stage_1_acquisition(self):
         """Stage 1: Data Acquisition"""
@@ -102,13 +197,16 @@ class LandCoverClassificationPipeline:
         
         ndvi_idx = self.feature_names.index('NDVI') if 'NDVI' in self.feature_names else 0
         ndvi = self.features[:, ndvi_idx]
-        
+
         labels = np.zeros(n_samples, dtype=int)
-        labels[ndvi < -0.3] = 0
-        labels[(ndvi >= -0.3) & (ndvi < 0.2)] = 3
-        labels[(ndvi >= 0.2) & (ndvi < 0.4)] = 4
-        labels[(ndvi >= 0.4) & (ndvi < 0.6)] = 2
-        labels[ndvi >= 0.6] = 1
+
+        labels[ndvi >= 0.8] = 1          # forest
+        labels[(ndvi >= 0.6) & (ndvi < 0.7)] = 2   # grass
+        labels[(ndvi >= 0.5) & (ndvi < 0.6)] = 4   # bare / open
+        labels[(ndvi >= 0.4) & (ndvi < 0.5)] = 3   # urban
+        labels[ndvi < 0.4] = 0                     # water/shadow
+
+
         
         noise_idx = np.random.choice(n_samples, int(0.05*n_samples), replace=False)
         labels[noise_idx] = np.random.randint(0, n_classes, len(noise_idx))
@@ -144,6 +242,32 @@ class LandCoverClassificationPipeline:
         
         self.classifiers_ml = clf.classifiers
         self.metrics_ml = clf.metrics
+        
+        # Create visualization of ML classification on full image
+        logger.info(f"\nGenerating ML classification visualization...")
+        img_height, img_width = self.imagery.shape[0], self.imagery.shape[1]
+        
+        # Get predictions from best classifier (Random Forest usually best)
+        if 'Random Forest' in clf.classifiers:
+            best_clf = clf.classifiers['Random Forest']
+        else:
+            best_clf = list(clf.classifiers.values())[0]
+        
+        predictions_ml = best_clf.predict(self.features)
+
+        # >>> DIAGNOSTIC LINES START HERE
+        print("predictions shape:", predictions_ml.shape)
+        print("image H,W:", img_height, img_width)
+        print("H*W:", img_height * img_width)
+
+        import numpy as np
+        unique, counts = np.unique(predictions_ml, return_counts=True)
+        for c, n in zip(unique, counts):
+            print("pred", c, n, f"{n/len(predictions_ml)*100:.1f}%")
+
+        labels_2d_ml = predictions_ml.reshape(img_height, img_width)
+        
+        self.visualize_classification_result(labels_2d_ml, self.imagery, title="ML Classification Result")
         
         self.stages['Traditional ML'] = {'status': 'Complete', 'n_models': len(clf.classifiers)}
         
@@ -273,14 +397,15 @@ class LandCoverClassificationPipeline:
         print(f"{'='*70}\n")
         
         from evaluation import ClassificationEvaluator
-
+        
         evaluator = ClassificationEvaluator()
-        if hasattr(self, 'metrics_ml'):
-            # Assume evaluator already knows where to read metrics from,
-            # or it loads them from disk internally
-            evaluator.generate_summary_report()
-
-            #evaluator.generate_summary_report(self.metrics_ml)
+        
+        # We always pass the ML metrics collected in Stage 4
+        if hasattr(self, 'metrics_ml') and self.metrics_ml:
+            logger.info("Generating summary report from in-memory ML metrics...")
+            evaluator.generate_summary_report(self.metrics_ml)
+        else:
+            logger.info("No ML metrics available, skipping evaluation summary.")
         
         self.evaluator = evaluator
         self.stages['Evaluation'] = {'status': 'Complete'}
@@ -303,6 +428,7 @@ class LandCoverClassificationPipeline:
         
         print(f"\n{'='*70}")
         print("✓ PIPELINE COMPLETE")
+        print(f"✓ Classification results saved to: {config.FIGURES_DIR}")
         print(f"{'='*70}\n")
     
     def run(self):

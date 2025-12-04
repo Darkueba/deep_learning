@@ -66,7 +66,26 @@ class TraditionalClassifiers:
         print(f"\n{'='*70}")
         print("DATA PREPARATION")
         print(f"{'='*70}")
-        
+        X = features
+        y = labels
+
+        # --------------------------------------------------
+        # OPTIONAL: downsample majority classes BEFORE split
+        # --------------------------------------------------
+        import numpy as np
+
+        def balance_downsample(X_in, y_in, max_per_class=40000):
+            X_list, y_list = [], []
+            for c in np.unique(y_in):
+                idx = np.where(y_in == c)[0]
+                if len(idx) > max_per_class:
+                    idx = np.random.choice(idx, max_per_class, replace=False)
+                X_list.append(X_in[idx])
+                y_list.append(y_in[idx])
+            return np.vstack(X_list), np.concatenate(y_list)
+
+        X, y = balance_downsample(X, y, max_per_class=40000)
+
         # Split data
         X_train, X_test, y_train, y_test = train_test_split(
             features, labels,

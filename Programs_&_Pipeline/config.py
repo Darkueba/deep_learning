@@ -12,17 +12,17 @@ SH_CLIENT_ID = "4ee192a5-eaab-44fa-abf0-048c20863523"
 SH_CLIENT_SECRET = "E2xvAOd5dNt6l3mVWPBnTHXaPWcuwWFp"
 
 # Study Area (Bounding Box in WGS84: lon_min, lat_min, lon_max, lat_max)
-BBOX = [12.20, 58.24, 12.37, 58.32]  # Trollhattan region
-STUDY_AREA_NAME = "Trollhattan"
+BBOX = [12.2, 58.24, 12.37, 58.33]
+STUDY_AREA_NAME = "Malaga"
 
 # Time Range for Data
-START_DATE = "2021-05-01"
-END_DATE = "2021-08-28"
+START_DATE = "2025-05-01"
+END_DATE = "2025-08-28"
 
 # Image Download Parameters
 IMAGE_SIZE = (512, 512)  # Resolution in pixels
 SPATIAL_RESOLUTION = 30  # Meters per pixel (Landsat native)
-MAX_CLOUD_COVER = 0.2  # 20% max cloud cover
+MAX_CLOUD_COVER = 0.1 # 20% max cloud cover
 
 # ============================================================================
 # LANDSAT BANDS CONFIGURATION
@@ -88,8 +88,8 @@ RANDOM_STATE = 42
 # Traditional Classifiers Parameters
 CLASSIFIER_PARAMS = {
     'random_forest': {
-        'n_estimators': 100,
-        'max_depth': 20,
+        'n_estimators': 200,
+        'max_depth': None,
         'min_samples_split': 5,
         'min_samples_leaf': 2,
         'random_state': RANDOM_STATE,
@@ -101,6 +101,7 @@ CLASSIFIER_PARAMS = {
         'C': 100,
         'gamma': 'scale',
         'probability': True,
+        'n_jobs': -1,
         'class_weight': 'balanced'
     },
     'knn': {
