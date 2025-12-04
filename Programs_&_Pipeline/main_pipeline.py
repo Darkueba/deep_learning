@@ -200,11 +200,20 @@ class LandCoverClassificationPipeline:
 
         labels = np.zeros(n_samples, dtype=int)
 
-        labels[ndvi >= 0.8] = 1          # forest
-        labels[(ndvi >= 0.6) & (ndvi < 0.7)] = 2   # grass
-        labels[(ndvi >= 0.5) & (ndvi < 0.6)] = 4   # bare / open
-        labels[(ndvi >= 0.4) & (ndvi < 0.5)] = 3   # urban
-        labels[ndvi < 0.4] = 0                     # water/shadow
+                # 0 - Water
+        labels[ndvi < 0.1] = 0
+
+        # 3 - Urban / built-up
+        labels[(ndvi >= 0.1) & (ndvi < 0.15)] = 3
+
+        # 4 - Bare soil / sparse vegetation
+        labels[(ndvi >= 0.15) & (ndvi < 0.18)] = 4
+
+        # 2 - Grassland / moderate vegetation
+        labels[(ndvi >= 0.18) & (ndvi < 0.20)] = 2
+
+        # 1 - Forest / dense vegetation
+        labels[ndvi >= 0.20] = 1
 
 
         
