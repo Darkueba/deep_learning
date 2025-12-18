@@ -135,7 +135,7 @@ MODULE 3: traditional_ml.py
 Purpose: Train & evaluate traditional classifiers
 Classifiers:
   1. Random Forest (ensemble method)
-  2. Support Vector Machine (SVM)
+  2. Support Vector Machine (SVM) [Not trained at the end]
   3. k-Nearest Neighbors (k-NN)
   4. Maximum Likelihood Classification (LDA)
 
@@ -192,7 +192,7 @@ Output:
 
 MODULE 6: visualization.py 
 ─────────────────────────────────────────────────────────────────────────────
-Purpose: Create publication-quality visualizations
+Purpose: Create visualizations
 Plots:
   • Classification maps (per class color-coded)
   • Confusion matrices (heatmaps)
@@ -222,104 +222,6 @@ Flow:
 Usage:
   python main_pipeline.py
 """
-
-# ============================================================================
-# QUICK START EXAMPLES
-# ============================================================================
-
-QUICK_START = """
-╔════════════════════════════════════════════════════════════════════════════╗
-║                         QUICK START EXAMPLES                              ║
-╚════════════════════════════════════════════════════════════════════════════╝
-
-EXAMPLE 1: Download Data Only
-──────────────────────────────────────────────────────────────────────────────
-from data_acquisition import LandsatDataAcquisition
-
-# Download
-acq = LandsatDataAcquisition()
-data, metadata, stats = acq.run()
-
-# data shape: (512, 512, 6) for [B04, B03, B02, B05, B06, B07]
-# data range: 0-10000 (Landsat reflectance values)
-
-
-EXAMPLE 2: Download + Extract Features
-──────────────────────────────────────────────────────────────────────────────
-from data_acquisition import LandsatDataAcquisition
-from feature_extraction import FeatureExtractor
-
-# Get data
-acq = LandsatDataAcquisition()
-data, _, _ = acq.run()
-
-# Extract features
-fe = FeatureExtractor(data)
-features_2d = fe.extract_all_features()  # (262144, num_features)
-feature_names = fe.feature_names
-
-
-EXAMPLE 3: Train Traditional Classifiers
-──────────────────────────────────────────────────────────────────────────────
-from traditional_ml import TraditionalClassifiers
-from data_acquisition import LandsatDataAcquisition
-from feature_extraction import FeatureExtractor
-
-# Get and process data
-acq = LandsatDataAcquisition()
-data, _, _ = acq.run()
-
-fe = FeatureExtractor(data)
-features_2d = fe.extract_all_features()
-
-# Create synthetic labels (replace with real labels)
-labels = generate_synthetic_labels(features_2d)
-
-# Train classifiers
-clf = TraditionalClassifiers()
-X_train, X_test, y_train, y_test = clf.prepare_data(features_2d, labels)
-classifiers = clf.train_all(X_train, y_train)
-results = clf.evaluate(X_test, y_test)
-
-
-EXAMPLE 4: Full Pipeline
-──────────────────────────────────────────────────────────────────────────────
-python main_pipeline.py
-
-# Runs entire pipeline:
-# 1. Download Landsat data
-# 2. Extract features
-# 3. Generate labels
-# 4. Train ML models
-# 5. Train DL models
-# 6. Evaluate all
-# 7. Create visualizations
-# 8. Generate report
-
-
-EXAMPLE 5: Using Your Own Labels
-──────────────────────────────────────────────────────────────────────────────
-# If you have labeled training data (from QGIS, ArcGIS, etc):
-
-import numpy as np
-from traditional_ml import TraditionalClassifiers
-
-# Load your labels (H, W)
-labels = np.load('my_labels.npy')
-
-# Reshape for ML (N, )
-labels_1d = labels.flatten()
-
-# Train classifier
-clf = TraditionalClassifiers()
-X_train, X_test, y_train, y_test = clf.prepare_data(features_2d, labels_1d)
-classifiers = clf.train_all(X_train, y_train)
-results = clf.evaluate(X_test, y_test)
-"""
-
-# ============================================================================
-# RESEARCH REQUIREMENTS MAPPING
-# ============================================================================
 
 REQUIREMENTS_ANALYSIS = """
 ╔════════════════════════════════════════════════════════════════════════════╗
@@ -527,111 +429,3 @@ Project Implementation:
   ✓ Figures with captions
   ✓ Summary statistics
 """
-
-# ============================================================================
-# EXPECTED RESULTS
-# ============================================================================
-
-EXPECTED_RESULTS = """
-╔════════════════════════════════════════════════════════════════════════════╗
-║                        EXPECTED RESULTS                                   ║
-╚════════════════════════════════════════════════════════════════════════════╝
-
-DATA ACQUISITION PHASE
-──────────────────────
-✓ Downloaded: 512×512 image (15 MB)
-✓ Bands: 6 (B04, B03, B02, B05, B06, B07)
-✓ Data type: uint16 (0-10000 range)
-✓ Visualization: 6-panel figure showing RGB, False Color, etc.
-✓ Statistics: Min/max/mean/std per band
-
-
-FEATURE EXTRACTION PHASE
-────────────────────────
-✓ Features created: 6 bands + 5 indices = 11 features
-✓ Feature matrix shape: (262144, 11)
-✓ NDVI range: -0.5 to 0.8 (typical)
-✓ Correlation analysis: Some indices highly correlated (expected)
-✓ Visualization: Correlation matrix heatmap
-
-
-TRADITIONAL ML PHASE
-─────────────────────
-Random Forest Performance:
-  • Overall Accuracy: 82-88%
-  • Kappa: 0.78-0.84
-  • F1 (Macro): 0.80-0.87
-  • Training Time: 2-5 minutes
-  
-Feature Importance:
-  1. NIR (B05): ~25% (vegetation indicator)
-  2. NDVI: ~20%
-  3. Red (B04): ~18%
-  4. NDWI: ~15%
-  5. Others: ~22%
-
-Confusion Patterns:
-  • Urban ↔ Bare Soil: 10-15% confusion (both low NDVI)
-  • Forest ↔ Grassland: 5-10% confusion (both high NDVI)
-  • Water: 95%+ accuracy (very distinct)
-
-
-DEEP LEARNING PHASE
-────────────────────
-U-Net Performance (if sufficient training data):
-  • Overall Accuracy: 85-92%
-  • Kappa: 0.81-0.88
-  • F1 (Macro): 0.83-0.90
-  • Training Time: 30-60 minutes (CPU), 5-10 minutes (GPU)
-  
-Training Curves:
-  • Loss decreasing smoothly
-  • Validation accuracy improving over epochs
-  • Early stopping prevents overfitting
-
-
-EVALUATION PHASE
-────────────────
-Comprehensive Metrics Generated:
-  ✓ Confusion matrices (6×6 per classifier)
-  ✓ Per-class precision/recall/F1
-  ✓ Overall accuracy comparisons
-  ✓ Kappa coefficient analysis
-  ✓ Classification maps (color-coded)
-  ✓ Feature importance ranking
-
-
-VISUALIZATION OUTPUTS
-─────────────────────
-Figures Generated:
-  1. Raw imagery (RGB, False Color, individual bands)
-  2. Spectral indices (NDVI, NDWI, NDBI maps)
-  3. Feature correlation matrix
-  4. Confusion matrices (heatmaps)
-  5. Classification maps (4 classes color-coded)
-  6. Accuracy comparison bar chart
-  7. Per-class F1-Score comparison
-  8. Feature importance (Random Forest)
-  9. Training curves (U-Net)
-  10. ROC curves (if applicable)
-
-
-EXPECTED ACCURACIES (Typical Literature Values)
-────────────────────────────────────────────────
-Random Forest:      80-87% OA
-SVM:                78-85% OA
-k-NN:               75-82% OA
-U-Net (with data):  85-92% OA
-
-Note: Your actual results depend on:
-  ✓ Quality of training labels
-  ✓ Size of training dataset
-  ✓ Seasonality and cloud cover
-  ✓ Specific study area characteristics
-"""
-
-if __name__ == "__main__":
-    print(MODULE_OVERVIEW)
-    print("\n" + QUICK_START)
-    print("\n" + REQUIREMENTS_ANALYSIS)
-    print("\n" + EXPECTED_RESULTS)
