@@ -1,5 +1,4 @@
-# Land Cover Classification – Results Notebook
-Sentinel Hub + Landsat 8
+#Land Cover Classification Sentinel Hub + Landsat 8
 
 ---
 
