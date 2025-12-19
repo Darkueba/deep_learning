@@ -4,6 +4,9 @@
 
 ## 📌 Overview
 
+
+<img width="2229" height="1475" alt="01_raw_imagery_visualization" src="https://github.com/user-attachments/assets/0ed22ec0-e0eb-4008-a914-5d437c618bc6" />
+
 This notebook presents the final results of a land cover classification task
 performed on Landsat-8 multispectral imagery. The objective was to generate
 accurate, pixel-level land cover maps and evaluate model performance using
@@ -25,6 +28,7 @@ clearly separates natural and built environments and highlights dominant land
 cover patterns across the region.
 
 **Output: Final Land Cover Map**
+<img width="1866" height="883" alt="classification_result_ml" src="https://github.com/user-attachments/assets/672159a1-1e20-48da-ac6b-6143239d018a" />
 
 
 
@@ -44,9 +48,7 @@ The comparison focuses on both quantitative accuracy and spatial consistency.
 - U-Net produces smoother, more spatially coherent predictions.
 - Deep learning improves boundary delineation between adjacent land cover types.
 
-[OUTPUT CELL – IMAGE]
-Model performance comparison (OA, Kappa)
-(figures/model_comparison.png)
+![Uploading 05_ml_accuracy_comparison.png…]()
 
 ---
 
@@ -67,9 +69,8 @@ metrics were computed:
 - Urban and bare soil show moderate confusion due to spectral similarity.
 - Vegetation indices significantly improved separability.
 
-[OUTPUT CELL – IMAGE]
-Confusion matrices for best-performing models
-(figures/confusion_matrices.png)
+
+<img width="1783" height="1475" alt="04_confusion_matrices_ml" src="https://github.com/user-attachments/assets/e8738d17-3b91-4930-86d9-c1d87bf78383" />
 
 ---
 
