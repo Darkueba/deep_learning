@@ -45,10 +45,10 @@ The comparison focuses on both quantitative accuracy and spatial consistency.
 
 **Key observations:**
 - Random Forest provides reliable class separation with low computational cost.
-- U-Net produces smoother, more spatially coherent predictions.
+- U-Net produces smoother, more spatially coherent predictions, but to reach high accuracy it needs more data or tunning.
 - Deep learning improves boundary delineation between adjacent land cover types.
-
-![Uploading 05_ml_accuracy_comparison.png…]()
+  
+<img width="1484" height="881" alt="05_ml_accuracy_comparison" src="https://github.com/user-attachments/assets/0c74031e-99fc-4680-9c31-caaf75518e26" />
 
 ---
 
@@ -74,26 +74,10 @@ metrics were computed:
 
 ---
 
-## 🗺️ Spatial Consistency Analysis
-
-Visual inspection of classification maps reveals:
-
-- Clean and continuous delineation of water bodies
-- High consistency in forested regions
-- Some misclassification between urban and bare soil
-- Reduced salt-and-pepper noise in deep learning outputs
-
-[OUTPUT CELL – IMAGE]
-Side-by-side spatial comparison (RF vs U-Net)
-(figures/spatial_comparison.png)
-
----
-
 ## 🔍 Key Findings
 
 - Spectral indices (NDVI, NDWI, NDBI, SAVI, MNDWI) were critical for accuracy.
 - Traditional ML models perform well with limited training data.
-- Deep learning excels at capturing spatial structure and context.
 - Model choice depends on data availability and computational resources.
 
 ---
@@ -106,13 +90,23 @@ Side-by-side spatial comparison (RF vs U-Net)
 
 ---
 
+## Why Random Forest Can Win
+Several common reasons why a Random Forest beats a neural network (including UNet) are:
+
+- **Small or noisy dataset:** With limited training data, deep models overfit easily, while Random Forests are more robust and often generalize better.
+- **Handcrafted features vs. raw pixels:** If the Random Forest uses strong engineered features (e.g., spectral indices, texture, domain features) and the UNet learns only from raw images, the classical model can outperform.
+- **Suboptimal UNet setup:** Inadequate depth, wrong loss, poor normalization, or insufficient training (too few epochs, bad learning rate, no augmentation) can all severely hurt UNet performance.
+
+---
+
 ## 🚀 Suggested Improvements
 
-- Incorporate multi-temporal imagery
-- Increase real ground truth samples
-- Add texture-based features
-- Use ensemble approaches (RF + U-Net)
-- Apply post-processing spatial filters
+- Increase U-Net performance.
+- Incorporate multi-temporal imagery.
+- Increase real ground truth samples.
+- Add texture-based features.
+- Use ensemble approaches (RF + U-Net).
+- Apply post-processing spatial filters.
 
 ---
 
@@ -121,9 +115,5 @@ Side-by-side spatial comparison (RF vs U-Net)
 This notebook demonstrates that multispectral satellite imagery combined with
 machine learning and deep learning techniques can produce accurate and
 interpretable land cover classification results. Random Forest serves as a
-strong baseline, while U-Net provides superior spatial realism and segmentation
-quality.
+strong baseline, while U-Net could get even better performane after some tunning and feature ingenering.
 
-[OUTPUT CELL – IMAGE]
-Final results summary visualization
-(figures/final_results_overview.png)
