@@ -1,0 +1,13 @@
+======================================================================
+CLASSIFICATION SUMMARY REPORT
+======================================================================
+
+Models evaluated:
+  - Random Forest: Overall Accuracy = 0.9552
+  - k-NN: Overall Accuracy = 0.9375
+  - LDA: Overall Accuracy = 0.8542
+
+Best classifier: Random Forest
+  Overall Accuracy: 0.9552
+
+======================================================================

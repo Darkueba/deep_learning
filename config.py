@@ -8,8 +8,8 @@ Centralizes all parameters for reproducibility and easy modification
 # ============================================================================
 
 # Sentinel Hub Credentials 
-SH_CLIENT_ID = ""
-SH_CLIENT_SECRET = ""
+SH_CLIENT_ID = "8344784b-e682-43bd-8438-77c3380cfa6e"
+SH_CLIENT_SECRET = "eFSfi4KnHiDuRP1USdB51nXZbrdUO6aB"
 
 # Study Area (Bounding Box in WGS84: lon_min, lat_min, lon_max, lat_max)
 BBOX = [-4.50, 36.65, -4.30, 36.80]
@@ -18,8 +18,8 @@ STUDY_AREA_NAME = "Malaga"
 # Time Range for Data
 
 
-START_DATE = "2025-05-01"
-END_DATE = "2025-08-28"
+START_DATE = "2022-05-01"
+END_DATE = "2023-08-28"
 
 # Image Download Parameters
 IMAGE_SIZE = (512, 512)  # Resolution in pixels
@@ -127,7 +127,7 @@ IMG_CHANNELS = len(DOWNLOAD_BANDS) if USE_ORIGINAL_BANDS else 0
 IMG_CHANNELS += sum(CALCULATE_INDICES.values()) if USE_SPECTRAL_INDICES else 0
 
 # Training Parameters
-EPOCHS = 50
+EPOCHS = 200
 BATCH_SIZE = 32
 LEARNING_RATE = 0.001
 DROPOUT_RATE = 0.3
