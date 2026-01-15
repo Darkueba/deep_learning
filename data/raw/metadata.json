@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-12-27T17:58:12.597805",
+  "shape": [
+    512,
+    512,
+    6
+  ],
+  "bbox": [
+    -4.5,
+    36.65,
+    -4.3,
+    36.8
+  ],
+  "bands": [
+    "B04",
+    "B03",
+    "B02",
+    "B05",
+    "B06",
+    "B07"
+  ],
+  "spatial_resolution": 30,
+  "source": "Sentinel Hub / Landsat OT L1"
+}
