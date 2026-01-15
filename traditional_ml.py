@@ -19,6 +19,10 @@ from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
     confusion_matrix, classification_report, cohen_kappa_score
 )
+
+# Use non-interactive backend to avoid tkinter threading issues with parallel jobs
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm

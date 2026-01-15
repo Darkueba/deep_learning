@@ -10,6 +10,10 @@ import time
 import logging
 from datetime import datetime
 from sklearn.model_selection import train_test_split
+
+# Use non-interactive backend to avoid tkinter threading issues with parallel jobs
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -299,7 +303,9 @@ class LandCoverClassificationPipeline:
             best_clf_name = list(clf.classifiers.keys())[0]
             best_clf = list(clf.classifiers.values())[0]
 
-        predictions_ml = best_clf.predict(self.features)
+        # Scale features before prediction (same scaler used during training)
+        features_scaled = clf.scaler.transform(self.features)
+        predictions_ml = best_clf.predict(features_scaled)
         self.predictions_ml = predictions_ml
         unique, counts = np.unique(predictions_ml, return_counts=True)
         for c, n in zip(unique, counts):
